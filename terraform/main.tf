@@ -173,7 +173,7 @@ resource "azurerm_function_app" "func" {
   app_service_plan_id        = azurerm_app_service_plan.asp.id
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
-  version = "~3"
+  version = "~4"
   os_type = "linux"
   https_only = true
 
