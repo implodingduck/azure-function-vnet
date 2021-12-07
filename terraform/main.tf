@@ -179,6 +179,7 @@ resource "azurerm_function_app" "func" {
 
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
+      "FUNCTIONS_WORKER_RUNTIME"     = "node"
       "WEBSITE_CONTENTOVERVNET"      = "1"
       "WEBSITE_VNET_ROUTE_ALL"       = "1"
   }
