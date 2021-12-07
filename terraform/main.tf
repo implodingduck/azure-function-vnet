@@ -48,6 +48,12 @@ data "azurerm_log_analytics_workspace" "default" {
   resource_group_name = "DefaultResourceGroup-EUS"
 } 
 
+data "azurerm_network_security_group" "basic" {
+    name                = "basic"
+    resource_group_name = "rg-network-eastus"
+}
+
+
 resource "azurerm_virtual_network" "default" {
   name                = "vnet-${local.func_name}-${local.loc_for_naming}"
   location            = azurerm_resource_group.rg.location
@@ -67,6 +73,11 @@ resource "azurerm_subnet" "pe" {
 
 }
 
+resource "azurerm_subnet_network_security_group_association" "pe" {
+  subnet_id                 = azurerm_subnet.pe.id
+  network_security_group_id = data.azurerm_network_security_group.basic.id
+}
+
 resource "azurerm_subnet" "functions" {
   name                  = "snet-functions-${local.loc_for_naming}"
   resource_group_name   = azurerm_virtual_network.default.resource_group_name
@@ -82,9 +93,12 @@ resource "azurerm_subnet" "functions" {
       name = "Microsoft.Web/serverFarms"
     }
   }
-  
-
  
+}
+
+resource "azurerm_subnet_network_security_group_association" "functions" {
+  subnet_id                 = azurerm_subnet.functions.id
+  network_security_group_id = data.azurerm_network_security_group.basic.id
 }
 
 
@@ -138,11 +152,11 @@ resource "azurerm_app_service_plan" "asp" {
   name                = "asp-${local.func_name}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = var.asp_kind
-  reserved = true
+  kind                = "elastic"
+  reserved = false
   sku {
-    tier = var.plan_tier
-    size = var.plan_size
+    tier = "Premium"
+    size = "EP1"
   }
 }
 
