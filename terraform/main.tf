@@ -136,11 +136,24 @@ resource "azurerm_private_dns_zone" "blob" {
   resource_group_name       = azurerm_resource_group.rg.name
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
+  name                  = "blob"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.blob.name
+  virtual_network_id    = azurerm_virtual_network.default.id
+}
+
 resource "azurerm_private_dns_zone" "functions" {
   name                      = "privatelink.azurewebsites.net"
   resource_group_name       = azurerm_resource_group.rg.name
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "functions" {
+  name                  = "functions"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.functions.name
+  virtual_network_id    = azurerm_virtual_network.default.id
+}
 
 resource "azurerm_private_endpoint" "pe" {
   name                = "pe-sa${local.func_name}"
