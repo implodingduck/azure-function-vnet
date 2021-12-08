@@ -271,6 +271,7 @@ resource "azurerm_function_app" "func" {
       "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
       "WEBSITE_CONTENTOVERVNET"      = "1"
       "WEBSITE_VNET_ROUTE_ALL"       = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"     = "1"
   }
 
   identity {
@@ -328,6 +329,7 @@ resource "azurerm_function_app" "func2" {
       "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
       "WEBSITE_CONTENTOVERVNET"      = "1"
       "WEBSITE_VNET_ROUTE_ALL"       = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"     = "1"
   }
 
   identity {
