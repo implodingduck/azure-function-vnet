@@ -113,15 +113,15 @@ resource "azurerm_subnet" "functions2" {
 #     "Microsoft.Web",
 #     "Microsoft.Storage"
 #   ]
-  delegation {
-    name = "serverfarm-delegation"
-    service_delegation {
-      name = "Microsoft.Web/serverFarms"
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/action",
-      ]
-    }
-  }
+#   delegation {
+#     name = "serverfarm-delegation"
+#     service_delegation {
+#       name = "Microsoft.Web/serverFarms"
+#       actions = [
+#         "Microsoft.Network/virtualNetworks/subnets/action",
+#       ]
+#     }
+#   }
  
 }
 
