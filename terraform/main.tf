@@ -162,13 +162,14 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_storage_account_network_rules" "fw" {
   depends_on = [
-    azurerm_app_service_virtual_network_swift_connection.example
+    azurerm_app_service_virtual_network_swift_connection.example,
+    azurerm_app_service_virtual_network_swift_connection.example2
   ]
   storage_account_id = azurerm_storage_account.sa.id
 
   default_action             = "Deny"
 
-  virtual_network_subnet_ids = [azurerm_subnet.functions.id]
+  virtual_network_subnet_ids = [azurerm_subnet.functions.id, azurerm_subnet.functions2.id]
 }
 
 resource "azurerm_app_service_plan" "asp" {
@@ -268,7 +269,7 @@ resource "null_resource" "publish_func"{
 }
 
 resource "azurerm_function_app" "func2" {
-  name                       = "${local.func_name}2"
+  name                       = "${local.func_name}priv"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id        = azurerm_app_service_plan.asp.id
