@@ -321,7 +321,7 @@ resource "null_resource" "publish_func2"{
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func2.name}"
   }
 }
 
