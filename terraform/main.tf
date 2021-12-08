@@ -268,7 +268,7 @@ resource "null_resource" "publish_func"{
 }
 
 resource "azurerm_function_app" "func2" {
-  name                       = "${local.func_name}"
+  name                       = "${local.func_name}2"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id        = azurerm_app_service_plan.asp.id
