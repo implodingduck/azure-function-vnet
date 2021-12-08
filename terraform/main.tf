@@ -268,60 +268,60 @@ resource "null_resource" "publish_func"{
   }
 }
 
-resource "azurerm_function_app" "func2" {
-  name                       = "${local.func_name}priv"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id        = azurerm_app_service_plan.asp.id
-  storage_account_name       = azurerm_storage_account.sa.name
-  storage_account_access_key = azurerm_storage_account.sa.primary_access_key
-  version = "~4"
-  os_type = ""
-  https_only = true
+# resource "azurerm_function_app" "func2" {
+#   name                       = "${local.func_name}priv"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   app_service_plan_id        = azurerm_app_service_plan.asp2.id
+#   storage_account_name       = azurerm_storage_account.sa.name
+#   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
+#   version = "~4"
+#   os_type = ""
+#   https_only = true
 
-  app_settings = {
-      "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
-      "FUNCTIONS_WORKER_RUNTIME"     = "node"
-      "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
-      "WEBSITE_CONTENTOVERVNET"      = "1"
-      "WEBSITE_VNET_ROUTE_ALL"       = "1"
-  }
+#   app_settings = {
+#       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app2.instrumentation_key
+#       "FUNCTIONS_WORKER_RUNTIME"     = "node"
+#       "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
+#       "WEBSITE_CONTENTOVERVNET"      = "1"
+#       "WEBSITE_VNET_ROUTE_ALL"       = "1"
+#   }
 
-  identity {
-    type = "SystemAssigned"
-  }
-}
+#   identity {
+#     type = "SystemAssigned"
+#   }
+# }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "example2" {
-  app_service_id = azurerm_function_app.func2.id
-  subnet_id      = azurerm_subnet.functions2.id
-}
+# resource "azurerm_app_service_virtual_network_swift_connection" "example2" {
+#   app_service_id = azurerm_function_app.func2.id
+#   subnet_id      = azurerm_subnet.functions2.id
+# }
 
 
-resource "local_file" "localsettings2" {
-    content     = <<-EOT
-{
-  "IsEncrypted": false,
-  "Values": {
-    "FUNCTIONS_WORKER_RUNTIME": "node",
-    "AzureWebJobsStorage": ""
-  }
-}
-EOT
-    filename = "../func2/local.settings.json"
-}
+# resource "local_file" "localsettings2" {
+#     content     = <<-EOT
+# {
+#   "IsEncrypted": false,
+#   "Values": {
+#     "FUNCTIONS_WORKER_RUNTIME": "node",
+#     "AzureWebJobsStorage": ""
+#   }
+# }
+# EOT
+#     filename = "../func2/local.settings.json"
+# }
 
-resource "null_resource" "publish_func2"{
-  depends_on = [
-    azurerm_function_app.func2,
-    local_file.localsettings2
-  ]
-  triggers = {
-    index = "${timestamp()}"
-  }
-  provisioner "local-exec" {
-    working_dir = "../func2"
-    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
-  }
-}
+# resource "null_resource" "publish_func2"{
+#   depends_on = [
+#     azurerm_function_app.func2,
+#     local_file.localsettings2
+#   ]
+#   triggers = {
+#     index = "${timestamp()}"
+#   }
+#   provisioner "local-exec" {
+#     working_dir = "../func2"
+#     command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
+#   }
+# }
 
