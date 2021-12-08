@@ -203,7 +203,7 @@ resource "azurerm_app_service_plan" "asp" {
   kind                = "elastic"
   reserved = false
   sku {
-    tier = "Premium"
+    tier = "ElasticPremium"
     size = "EP1"
   }
 }
@@ -215,7 +215,7 @@ resource "azurerm_app_service_plan" "asp2" {
   kind                = "elastic"
   reserved = false
   sku {
-    tier = "Premium"
+    tier = "ElasticPremium"
     size = "EP1"
   }
 }
@@ -341,7 +341,7 @@ resource "null_resource" "publish_func2"{
     local_file.localsettings2
   ]
   triggers = {
-    index = "1" #"${timestamp()}"
+    index = "2" #"${timestamp()}"
   }
   provisioner "local-exec" {
     working_dir = "../func2"
