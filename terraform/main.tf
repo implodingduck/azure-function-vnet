@@ -91,6 +91,9 @@ resource "azurerm_subnet" "functions" {
     name = "serverfarm-delegation"
     service_delegation {
       name = "Microsoft.Web/serverFarms"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action",
+      ]
     }
   }
  
@@ -106,14 +109,17 @@ resource "azurerm_subnet" "functions2" {
   resource_group_name   = azurerm_virtual_network.default.resource_group_name
   virtual_network_name  = azurerm_virtual_network.default.name
   address_prefixes      = ["10.4.0.128/26"]
-  service_endpoints = [
-    "Microsoft.Web",
-    "Microsoft.Storage"
-  ]
+#   service_endpoints = [
+#     "Microsoft.Web",
+#     "Microsoft.Storage"
+#   ]
   delegation {
     name = "serverfarm-delegation"
     service_delegation {
       name = "Microsoft.Web/serverFarms"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action",
+      ]
     }
   }
  
