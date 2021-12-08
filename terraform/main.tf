@@ -160,17 +160,17 @@ resource "azurerm_storage_account" "sa" {
   tags = local.tags
 }
 
-resource "azurerm_storage_account_network_rules" "fw" {
-  depends_on = [
-    azurerm_app_service_virtual_network_swift_connection.example,
-    azurerm_app_service_virtual_network_swift_connection.example2
-  ]
-  storage_account_id = azurerm_storage_account.sa.id
+# resource "azurerm_storage_account_network_rules" "fw" {
+#   depends_on = [
+#     azurerm_app_service_virtual_network_swift_connection.example,
+#     azurerm_app_service_virtual_network_swift_connection.example2
+#   ]
+#   storage_account_id = azurerm_storage_account.sa.id
 
-  default_action             = "Deny"
+#   default_action             = "Deny"
 
-  virtual_network_subnet_ids = [azurerm_subnet.functions.id, azurerm_subnet.functions2.id]
-}
+#   virtual_network_subnet_ids = [azurerm_subnet.functions.id, azurerm_subnet.functions2.id]
+# }
 
 resource "azurerm_app_service_plan" "asp" {
   name                = "asp-${local.func_name}"
