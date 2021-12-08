@@ -130,6 +130,11 @@ resource "azurerm_private_dns_zone" "blob" {
   resource_group_name       = azurerm_resource_group.rg.name
 }
 
+resource "azurerm_private_dns_zone" "functions" {
+  name                      = "privatelink.azurewebsites.net"
+  resource_group_name       = azurerm_resource_group.rg.name
+}
+
 
 resource "azurerm_private_endpoint" "pe" {
   name                = "pe-sa${local.func_name}"
@@ -148,6 +153,25 @@ resource "azurerm_private_endpoint" "pe" {
     private_dns_zone_ids = [azurerm_private_dns_zone.blob.id]
   }
 }
+
+resource "azurerm_private_endpoint" "pefunction" {
+  name                = "pe-${local.func_name}priv"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  subnet_id           = azurerm_subnet.pe.id
+
+  private_service_connection {
+    name                           = "pe-connection-${local.func_name}priv"
+    private_connection_resource_id = azurerm_function_app.func2.id
+    is_manual_connection           = false
+    subresource_names              = ["sites"]
+  }
+  private_dns_zone_group {
+    name                 = azurerm_private_dns_zone.functions.name
+    private_dns_zone_ids = [azurerm_private_dns_zone.functions.id]
+  }
+}
+
 
 resource "azurerm_storage_account" "sa" {
   name                     = "sa${local.func_name}"
