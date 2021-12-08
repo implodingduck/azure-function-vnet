@@ -101,6 +101,29 @@ resource "azurerm_subnet_network_security_group_association" "functions" {
   network_security_group_id = data.azurerm_network_security_group.basic.id
 }
 
+resource "azurerm_subnet" "functions2" {
+  name                  = "snet-functions2-${local.loc_for_naming}"
+  resource_group_name   = azurerm_virtual_network.default.resource_group_name
+  virtual_network_name  = azurerm_virtual_network.default.name
+  address_prefixes      = ["10.4.0.128/26"]
+  service_endpoints = [
+    "Microsoft.Web",
+    "Microsoft.Storage"
+  ]
+  delegation {
+    name = "serverfarm-delegation"
+    service_delegation {
+      name = "Microsoft.Web/serverFarms"
+    }
+  }
+ 
+}
+
+resource "azurerm_subnet_network_security_group_association" "functions2" {
+  subnet_id                 = azurerm_subnet.functions2.id
+  network_security_group_id = data.azurerm_network_security_group.basic.id
+}
+
 
 resource "azurerm_private_dns_zone" "blob" {
   name                      = "privatelink.blob.core.windows.net"
@@ -160,11 +183,32 @@ resource "azurerm_app_service_plan" "asp" {
   }
 }
 
+resource "azurerm_app_service_plan" "asp2" {
+  name                = "asp-${local.func_name}-2"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  kind                = "elastic"
+  reserved = false
+  sku {
+    tier = "Premium"
+    size = "EP1"
+  }
+}
+
 resource "azurerm_application_insights" "app" {
   name                = "${local.func_name}-insights"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   application_type    = "other"
+  workspace_id = data.azurerm_log_analytics_workspace.default.id
+}
+
+resource "azurerm_application_insights" "app2" {
+  name                = "${local.func_name}-2-insights"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "other"
+  workspace_id = data.azurerm_log_analytics_workspace.default.id
 }
 resource "azurerm_function_app" "func" {
   name                       = "${local.func_name}"
@@ -189,7 +233,6 @@ resource "azurerm_function_app" "func" {
     type = "SystemAssigned"
   }
 }
-
 
 resource "azurerm_app_service_virtual_network_swift_connection" "example" {
   app_service_id = azurerm_function_app.func.id
@@ -223,3 +266,61 @@ resource "null_resource" "publish_func"{
     command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
   }
 }
+
+resource "azurerm_function_app" "func2" {
+  name                       = "${local.func_name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id        = azurerm_app_service_plan.asp.id
+  storage_account_name       = azurerm_storage_account.sa.name
+  storage_account_access_key = azurerm_storage_account.sa.primary_access_key
+  version = "~4"
+  os_type = ""
+  https_only = true
+
+  app_settings = {
+      "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
+      "FUNCTIONS_WORKER_RUNTIME"     = "node"
+      "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
+      "WEBSITE_CONTENTOVERVNET"      = "1"
+      "WEBSITE_VNET_ROUTE_ALL"       = "1"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_app_service_virtual_network_swift_connection" "example2" {
+  app_service_id = azurerm_function_app.func2.id
+  subnet_id      = azurerm_subnet.functions2.id
+}
+
+
+resource "local_file" "localsettings2" {
+    content     = <<-EOT
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": ""
+  }
+}
+EOT
+    filename = "../func2/local.settings.json"
+}
+
+resource "null_resource" "publish_func2"{
+  depends_on = [
+    azurerm_function_app.func2,
+    local_file.localsettings2
+  ]
+  triggers = {
+    index = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    working_dir = "../func2"
+    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
+  }
+}
+
