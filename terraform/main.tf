@@ -109,10 +109,6 @@ resource "azurerm_subnet" "functions2" {
   resource_group_name   = azurerm_virtual_network.default.resource_group_name
   virtual_network_name  = azurerm_virtual_network.default.name
   address_prefixes      = ["10.4.0.128/26"]
-#   service_endpoints = [
-#     "Microsoft.Web",
-#     "Microsoft.Storage"
-#   ]
   delegation {
     name = "serverfarm-delegation"
     service_delegation {
@@ -174,6 +170,9 @@ resource "azurerm_private_endpoint" "pe" {
 }
 
 resource "azurerm_private_endpoint" "pefunction" {
+  depends_on = [
+    null_resource.publish_func2
+  ]
   name                = "pe-${local.func_name}priv"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
