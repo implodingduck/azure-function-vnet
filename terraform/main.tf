@@ -265,9 +265,13 @@ resource "azurerm_function_app" "func" {
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
   version = "~4"
-  os_type = ""
+  os_type = "linux"
   https_only = true
-
+  site_config {
+    linux_fx_version          = "node|14"
+    use_32_bit_worker_process = false
+    vnet_route_all_enabled    = true
+  }
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
       "FUNCTIONS_WORKER_RUNTIME"       = "node"
@@ -325,8 +329,13 @@ resource "azurerm_function_app" "func2" {
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
   version = "~4"
-  os_type = ""
+  os_type = "linux"
   https_only = true
+  site_config {
+    linux_fx_version          = "node|14"
+    use_32_bit_worker_process = false
+    vnet_route_all_enabled    = true
+  }
 
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app2.instrumentation_key
