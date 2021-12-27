@@ -319,7 +319,7 @@ resource "null_resource" "publish_func"{
   }
   provisioner "local-exec" {
     working_dir = "../func1"
-    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "export SCM_DO_BUILD_DURING_DEPLOYMENT=true && func azure functionapp publish ${azurerm_function_app.func.name}"
   }
 }
 
@@ -384,7 +384,7 @@ resource "null_resource" "publish_func2"{
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "func azure functionapp publish ${azurerm_function_app.func2.name}"
+    command     = "export SCM_DO_BUILD_DURING_DEPLOYMENT=true && func azure functionapp publish ${azurerm_function_app.func2.name}"
   }
 }
 
