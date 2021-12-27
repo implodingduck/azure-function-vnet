@@ -223,7 +223,7 @@ resource "azurerm_app_service_plan" "asp" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   kind                = "linux"
-  reserved = false
+  reserved = true
   sku {
     tier = "ElasticPremium"
     size = "EP1"
@@ -235,7 +235,7 @@ resource "azurerm_app_service_plan" "asp2" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   kind                = "linux"
-  reserved = false
+  reserved = true
   sku {
     tier = "ElasticPremium"
     size = "EP1"
