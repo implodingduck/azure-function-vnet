@@ -222,7 +222,7 @@ resource "azurerm_app_service_plan" "asp" {
   name                = "asp-${local.func_name}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = "elastic"
+  kind                = "linux"
   reserved = false
   sku {
     tier = "ElasticPremium"
@@ -234,7 +234,7 @@ resource "azurerm_app_service_plan" "asp2" {
   name                = "asp-${local.func_name}-2"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = "elastic"
+  kind                = "linux"
   reserved = false
   sku {
     tier = "ElasticPremium"
