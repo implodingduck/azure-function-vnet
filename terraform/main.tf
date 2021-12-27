@@ -280,7 +280,7 @@ resource "azurerm_function_app" "func" {
       "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
       "WEBSITE_CONTENTOVERVNET"        = "1"
       "WEBSITE_VNET_ROUTE_ALL"         = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"       = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"       = "0"
       "ENABLE_ORYX_BUILD"              = "true"
       "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
@@ -302,7 +302,10 @@ resource "local_file" "localsettings" {
   "IsEncrypted": false,
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
-    "AzureWebJobsStorage": ""
+    "AzureWebJobsStorage": "",
+    "ENABLE_ORYX_BUILD": true,
+    "SCM_DO_BUILD_DURING_DEPLOYMENT": true
+
   }
 }
 EOT
@@ -319,7 +322,7 @@ resource "null_resource" "publish_func"{
   }
   provisioner "local-exec" {
     working_dir = "../func1"
-    command     = "export SCM_DO_BUILD_DURING_DEPLOYMENT=true && func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
   }
 }
 
@@ -345,7 +348,7 @@ resource "azurerm_function_app" "func2" {
       "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
       "WEBSITE_CONTENTOVERVNET"        = "1"
       "WEBSITE_VNET_ROUTE_ALL"         = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"       = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"       = "0"
       "ENABLE_ORYX_BUILD"              = "true"
       "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
@@ -368,6 +371,8 @@ resource "local_file" "localsettings2" {
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": ""
+    "ENABLE_ORYX_BUILD": true,
+    "SCM_DO_BUILD_DURING_DEPLOYMENT": true
   }
 }
 EOT
@@ -384,7 +389,7 @@ resource "null_resource" "publish_func2"{
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "export SCM_DO_BUILD_DURING_DEPLOYMENT=true && func azure functionapp publish ${azurerm_function_app.func2.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func2.name}"
   }
 }
 
