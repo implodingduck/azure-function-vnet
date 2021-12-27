@@ -266,11 +266,13 @@ resource "azurerm_function_app" "func" {
 
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
-      "FUNCTIONS_WORKER_RUNTIME"     = "node"
-      "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
-      "WEBSITE_CONTENTOVERVNET"      = "1"
-      "WEBSITE_VNET_ROUTE_ALL"       = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"     = "1"
+      "FUNCTIONS_WORKER_RUNTIME"       = "node"
+      "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
+      "WEBSITE_CONTENTOVERVNET"        = "1"
+      "WEBSITE_VNET_ROUTE_ALL"         = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"       = "1"
+      "ENABLE_ORYX_BUILD"              = "true"
+      "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
 
   identity {
@@ -307,7 +309,7 @@ resource "null_resource" "publish_func"{
   }
   provisioner "local-exec" {
     working_dir = "../func1"
-    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
   }
 }
 
@@ -324,11 +326,13 @@ resource "azurerm_function_app" "func2" {
 
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app2.instrumentation_key
-      "FUNCTIONS_WORKER_RUNTIME"     = "node"
-      "WEBSITE_NODE_DEFAULT_VERSION" = "~14"
-      "WEBSITE_CONTENTOVERVNET"      = "1"
-      "WEBSITE_VNET_ROUTE_ALL"       = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"     = "1"
+      "FUNCTIONS_WORKER_RUNTIME"       = "node"
+      "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
+      "WEBSITE_CONTENTOVERVNET"        = "1"
+      "WEBSITE_VNET_ROUTE_ALL"         = "1"
+      "WEBSITE_RUN_FROM_PACKAGE"       = "1"
+      "ENABLE_ORYX_BUILD"              = "true"
+      "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
 
   identity {
@@ -361,11 +365,11 @@ resource "null_resource" "publish_func2"{
     local_file.localsettings2
   ]
   triggers = {
-    index = "3" #"${timestamp()}"
+    index = "${timestamp()}"
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func2.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func2.name}"
   }
 }
 
