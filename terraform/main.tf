@@ -118,6 +118,10 @@ resource "azurerm_subnet" "functions2" {
       ]
     }
   }
+  service_endpoints = [
+    "Microsoft.Web",
+    "Microsoft.Storage"
+  ]
  
 }
 
