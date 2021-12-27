@@ -209,7 +209,9 @@ resource "azurerm_storage_account" "sa" {
 resource "azurerm_storage_account_network_rules" "fw" {
   depends_on = [
     azurerm_app_service_virtual_network_swift_connection.example,
-    azurerm_app_service_virtual_network_swift_connection.example2
+    azurerm_app_service_virtual_network_swift_connection.example2,
+    null_resource.publish_func,
+    null_resource.publish_func2 
   ]
   storage_account_id = azurerm_storage_account.sa.id
 
