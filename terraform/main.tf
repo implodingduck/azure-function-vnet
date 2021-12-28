@@ -270,7 +270,6 @@ resource "azurerm_function_app" "func" {
   os_type = "linux"
   https_only = true
   site_config {
-    linux_fx_version          = "Node|14"
     use_32_bit_worker_process = false
     vnet_route_all_enabled    = true
   }
@@ -279,10 +278,6 @@ resource "azurerm_function_app" "func" {
       "FUNCTIONS_WORKER_RUNTIME"       = "node"
       "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
       "WEBSITE_CONTENTOVERVNET"        = "1"
-      "WEBSITE_VNET_ROUTE_ALL"         = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"       = "0"
-      "ENABLE_ORYX_BUILD"              = "true"
-      "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
 
   identity {
@@ -302,10 +297,7 @@ resource "local_file" "localsettings" {
   "IsEncrypted": false,
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
-    "AzureWebJobsStorage": "",
-    "ENABLE_ORYX_BUILD": true,
-    "SCM_DO_BUILD_DURING_DEPLOYMENT": true
-
+    "AzureWebJobsStorage": ""
   }
 }
 EOT
@@ -322,7 +314,7 @@ resource "null_resource" "publish_func"{
   }
   provisioner "local-exec" {
     working_dir = "../func1"
-    command     = "func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func.name}"
   }
 }
 
@@ -337,7 +329,6 @@ resource "azurerm_function_app" "func2" {
   os_type = "linux"
   https_only = true
   site_config {
-    linux_fx_version          = "Node|14"
     use_32_bit_worker_process = false
     vnet_route_all_enabled    = true
   }
@@ -347,10 +338,6 @@ resource "azurerm_function_app" "func2" {
       "FUNCTIONS_WORKER_RUNTIME"       = "node"
       "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
       "WEBSITE_CONTENTOVERVNET"        = "1"
-      "WEBSITE_VNET_ROUTE_ALL"         = "1"
-      "WEBSITE_RUN_FROM_PACKAGE"       = "0"
-      "ENABLE_ORYX_BUILD"              = "true"
-      "SCM_DO_BUILD_DURING_DEPLOYMENT" = "true"
   }
 
   identity {
@@ -371,8 +358,6 @@ resource "local_file" "localsettings2" {
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": ""
-    "ENABLE_ORYX_BUILD": true,
-    "SCM_DO_BUILD_DURING_DEPLOYMENT": true
   }
 }
 EOT
@@ -389,7 +374,7 @@ resource "null_resource" "publish_func2"{
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "func azure functionapp publish ${azurerm_function_app.func2.name}"
+    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func2.name}"
   }
 }
 
