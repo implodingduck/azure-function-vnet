@@ -315,7 +315,7 @@ resource "null_resource" "publish_func"{
   }
   provisioner "local-exec" {
     working_dir = "../func1"
-    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func.name} --build remote"
   }
 }
 
@@ -376,7 +376,7 @@ resource "null_resource" "publish_func2"{
   }
   provisioner "local-exec" {
     working_dir = "../func2"
-    command     = "npm install && func azure functionapp publish ${azurerm_function_app.func2.name}"
+    command     = "func azure functionapp publish ${azurerm_function_app.func2.name} --build remote"
   }
 }
 
