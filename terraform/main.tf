@@ -372,7 +372,7 @@ resource "null_resource" "publish_func2"{
     local_file.localsettings2
   ]
   triggers = {
-    index = "2" #"${timestamp()}"
+    index = "${timestamp()}"
   }
   provisioner "local-exec" {
     working_dir = "../func2"
