@@ -270,6 +270,7 @@ resource "azurerm_function_app" "func" {
   os_type = "linux"
   https_only = true
   site_config {
+    linux_fx_version = "node|14"
     use_32_bit_worker_process = false
     vnet_route_all_enabled    = true
   }
@@ -329,6 +330,7 @@ resource "azurerm_function_app" "func2" {
   os_type = "linux"
   https_only = true
   site_config {
+    linux_fx_version = "node|14"
     use_32_bit_worker_process = false
     vnet_route_all_enabled    = true
   }
