@@ -2,9 +2,9 @@ const axios = require('axios');
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    context.log(JSON.stringify(req))
+    const privurlhost = req.headers.host.replace(".azurewebsites", "priv.azurewebsites")
     context.log("preaxios")
-    const res = await axios.get('https://funcvnetntb4g10spriv.azurewebsites.net/api/httptrigger');
+    const res = await axios.get(`https://${privurlhost}/api/httptrigger`);
     context.log(res.data)
     context.log("postaxios")
     context.res = {
