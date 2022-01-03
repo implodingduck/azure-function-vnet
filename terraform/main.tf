@@ -217,7 +217,29 @@ resource "azurerm_storage_account_network_rules" "fw" {
 
   default_action             = "Deny"
 
-  virtual_network_subnet_ids = [azurerm_subnet.functions.id, azurerm_subnet.functions2.id]
+  virtual_network_subnet_ids = [
+    azurerm_subnet.functions.id, 
+    azurerm_subnet.functions2.id,
+    "20.37.158.0/23",
+    "20.37.194.0/24",
+    "20.39.13.0/26",
+    "20.41.6.0/23",
+    "20.41.194.0/24",
+    "20.42.5.0/24",
+    "20.42.134.0/23",
+    "20.42.226.0/24",
+    "20.45.196.64/26",
+    "20.189.107.0/24",
+    "20.195.68.0/24",
+    "40.74.28.0/23",
+    "40.80.187.0/24",
+    "40.82.252.0/24",
+    "40.119.10.0/24",
+    "51.104.26.0/24",
+    "52.150.138.0/24",
+    "52.228.82.0/24",
+    "191.235.226.0/24"
+  ]
 }
 
 resource "azurerm_app_service_plan" "asp" {
