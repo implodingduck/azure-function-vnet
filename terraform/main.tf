@@ -219,7 +219,10 @@ resource "azurerm_storage_account_network_rules" "fw" {
 
   virtual_network_subnet_ids = [
     azurerm_subnet.functions.id, 
-    azurerm_subnet.functions2.id,
+    azurerm_subnet.functions2.id
+  ]
+
+  ip_rules                   = [
     "20.37.158.0/23",
     "20.37.194.0/24",
     "20.39.13.0/26",
@@ -239,6 +242,10 @@ resource "azurerm_storage_account_network_rules" "fw" {
     "52.150.138.0/24",
     "52.228.82.0/24",
     "191.235.226.0/24"
+  ]
+
+  bypass = [
+    "AzureServices"
   ]
 }
 
